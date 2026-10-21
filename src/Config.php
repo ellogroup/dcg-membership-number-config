@@ -40,11 +40,13 @@ class Config {
         if (!$configFile) {
             $configFile = static::getDefaultConfigFile();
         }
-        if (!isset(self::$instance[$configFile][$env])) {
-            self::$instance[$configFile][$env] = new static($env);
-            self::$instance[$configFile][$env]->configFileToArray($configFile);
+        // Subclasses which do not use a config file have no file name
+        $instanceKey = (string) $configFile;
+        if (!isset(self::$instance[$instanceKey][$env])) {
+            self::$instance[$instanceKey][$env] = new static($env);
+            self::$instance[$instanceKey][$env]->configFileToArray($configFile);
         }
-        return self::$instance[$configFile][$env];
+        return self::$instance[$instanceKey][$env];
     }
 
     /**
